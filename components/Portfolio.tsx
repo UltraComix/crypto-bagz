@@ -168,27 +168,27 @@ export default function Portfolio() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 p-6 rounded-xl shadow-lg">
-        <div className="flex items-center gap-4">
+    <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-4 sm:space-y-8">
+      <header className="flex flex-col gap-4 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 p-4 sm:p-6 rounded-xl shadow-lg">
+        <div className="flex items-center gap-3">
           <img 
             src="/logo.png" 
             alt="Crypto Bagz Logo" 
-            className="w-16 h-16 object-contain"
+            className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
           />
           <div>
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-500 text-transparent bg-clip-text">
+            <h1 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-500 text-transparent bg-clip-text">
               Crypto Bagz
             </h1>
-            <p className="mt-2 text-sm text-gray-400">
+            <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-gray-400">
               Track your crypto assets in real-time
             </p>
           </div>
         </div>
-        <div className="flex gap-4 w-full sm:w-auto">
+        <div className="flex flex-wrap gap-2 sm:gap-4">
           <button
             onClick={toggleTheme}
-            className="inline-flex items-center px-4 py-2 border border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-300 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
+            className="flex-none inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 border border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-300 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
           >
             {theme === 'light' ? (
               <MoonIcon className="h-4 w-4" />
@@ -198,17 +198,18 @@ export default function Portfolio() {
           </button>
           <button
             onClick={handleExport}
-            className="inline-flex items-center px-4 py-2 border border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-300 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
+            className="flex-none inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 border border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-300 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
           >
-            <ArrowDownTrayIcon className="h-4 w-4 mr-2" />
-            Export
+            <ArrowDownTrayIcon className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Export</span>
           </button>
           <button
             onClick={() => setShowAddToken(true)}
-            className="w-full sm:w-auto flex-none bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md transition-colors duration-200"
+            className="flex-1 sm:flex-none bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md transition-colors duration-200 flex items-center justify-center"
           >
-            <PlusIcon className="h-4 w-4 mr-2 inline-block" />
-            Add Token
+            <PlusIcon className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Add Token</span>
+            <span className="sm:hidden">Add</span>
           </button>
         </div>
       </header>

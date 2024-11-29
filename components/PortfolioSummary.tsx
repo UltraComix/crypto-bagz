@@ -5,63 +5,71 @@ import { ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/
 
 interface PortfolioSummaryProps {
   tokens: Token[];
-  loading: boolean;
 }
 
-export default function PortfolioSummary({ tokens, loading }: PortfolioSummaryProps) {
+export default function PortfolioSummary({ tokens }: PortfolioSummaryProps) {
   const totalValue = tokens.reduce((sum, token) => sum + (token.value || 0), 0);
   const totalChange24h = tokens.reduce((sum, token) => {
-    const tokenValue = token.value || 0;
-    const changePercent = token.priceChangePercentage24h || 0;
-    return sum + (tokenValue * changePercent / 100);
+    if (token.value && token.priceChangePercentage24h) {
+      return sum + (token.value * token.priceChangePercentage24h / 100);
+    }
+    return sum;
   }, 0);
-  
-  const changePercent24h = (totalChange24h / (totalValue - totalChange24h)) * 100;
+  const changePercentage = (totalChange24h / (totalValue - totalChange24h)) * 100;
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      <div className="bg-gradient-to-r from-purple-600 to-blue-500 rounded-lg shadow-lg p-6 md:p-8 text-white">
-        <h2 className="text-lg md:text-xl font-semibold mb-2 opacity-90">Total Value</h2>
-        <div className="text-2xl md:text-4xl font-bold">
-          {loading ? (
-            <div className="animate-pulse bg-white bg-opacity-20 h-10 w-48 rounded-lg"></div>
-          ) : (
-            `$${totalValue.toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}`
-          )}
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sm:p-6">
+      <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Portfolio Summary</h2>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <div className="text-sm text-gray-500 dark:text-gray-400">Total Value</div>
+          <div className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+            ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <div className="text-sm text-gray-500 dark:text-gray-400">24h Change</div>
+          <div className="flex items-baseline gap-2">
+            <div className={`text-2xl sm:text-3xl font-bold ${
+              totalChange24h >= 0 ? 'text-green-500' : 'text-red-500'
+            }`}>
+              {totalChange24h >= 0 ? '+' : ''}
+              ${Math.abs(totalChange24h).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </div>
+            <div className={`text-sm font-medium ${
+              changePercentage >= 0 ? 'text-green-500' : 'text-red-500'
+            }`}>
+              ({changePercentage >= 0 ? '+' : ''}{changePercentage.toFixed(2)}%)
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 md:p-8">
-        <h2 className="text-lg md:text-xl font-semibold mb-2 text-gray-700 dark:text-gray-300">24h Performance</h2>
-        {loading ? (
-          <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-10 w-48 rounded-lg"></div>
-        ) : (
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className={`text-2xl md:text-4xl font-bold ${
-                totalChange24h >= 0 ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'
-              }`}>
-                ${Math.abs(totalChange24h).toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-              </div>
-              {totalChange24h >= 0 ? (
-                <ArrowTrendingUpIcon className="h-6 w-6 text-green-600 dark:text-green-500" />
-              ) : (
-                <ArrowTrendingDownIcon className="h-6 w-6 text-red-600 dark:text-red-500" />
+      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">Assets: {tokens.length}</div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          {tokens.slice(0, 6).map(token => (
+            <div key={token.id} className="flex items-center gap-2">
+              {token.image && (
+                <img 
+                  src={token.image} 
+                  alt={token.symbol}
+                  className="w-6 h-6 rounded-full"
+                />
               )}
+              <div className="min-w-0">
+                <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                  {token.symbol.toUpperCase()}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                  ${token.value?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                </div>
+              </div>
             </div>
-            <div className={`text-sm md:text-base font-medium ${
-              changePercent24h >= 0 ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'
-            }`}>
-              {changePercent24h >= 0 ? '+' : ''}{changePercent24h.toFixed(2)}% (24h)
-            </div>
-          </div>
-        )}
+          ))}
+        </div>
       </div>
     </div>
   );

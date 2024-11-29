@@ -6,7 +6,7 @@ import { TrashIcon, ChevronUpIcon, ChevronDownIcon, PencilIcon } from '@heroicon
 
 interface TokenListProps {
   tokens: Token[];
-  onRemove: (id: string) => void;
+  onDelete: (id: string) => void;
   onEdit: (token: Token) => void;
   loading: boolean;
 }
@@ -14,7 +14,7 @@ interface TokenListProps {
 type SortField = 'name' | 'amount' | 'price' | 'value' | 'change';
 type SortDirection = 'asc' | 'desc';
 
-export default function TokenList({ tokens, onRemove, onEdit, loading }: TokenListProps) {
+export default function TokenList({ tokens, onDelete, onEdit, loading }: TokenListProps) {
   const [sortField, setSortField] = useState<SortField>('value');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [searchQuery, setSearchQuery] = useState('');
@@ -72,123 +72,90 @@ export default function TokenList({ tokens, onRemove, onEdit, loading }: TokenLi
     }
   });
 
-  const renderSortableHeader = (field: SortField, label: string) => (
-    <th
-      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700"
-      onClick={() => handleSort(field)}
-    >
-      <span className="flex items-center gap-1">
-        {label}
-        <SortIcon field={field} />
-      </span>
-    </th>
-  );
-
   return (
-    <div className="space-y-4">
-      <div className="relative">
-        <input
-          type="text"
-          placeholder="Search tokens..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-        />
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {sortedTokens.map((token) => (
+        <div
+          key={token.id}
+          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 relative group"
+        >
+          <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button
+              onClick={() => onEdit(token)}
+              className="p-1 text-gray-500 hover:text-blue-500 transition-colors"
+            >
+              <PencilIcon className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => onDelete(token.id)}
+              className="p-1 text-gray-500 hover:text-red-500 transition-colors"
+            >
+              <TrashIcon className="h-4 w-4" />
+            </button>
+          </div>
 
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead className="bg-gray-50 dark:bg-gray-700">
-            <tr>
-              {renderSortableHeader('name', 'Token')}
-              {renderSortableHeader('amount', 'Amount')}
-              {renderSortableHeader('price', 'Price')}
-              {renderSortableHeader('change', '24h Change')}
-              {renderSortableHeader('value', 'Value')}
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-            {sortedTokens.map((token) => (
-              <tr key={token.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center gap-3">
-                    {token.image && (
-                      <img 
-                        src={token.image} 
-                        alt={token.symbol}
-                        className="w-8 h-8 rounded-full"
-                      />
-                    )}
-                    <div>
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">
-                        {token.name || token.symbol}
-                      </div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400 uppercase">
-                        {token.symbol}
-                      </div>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900 dark:text-white">{token.amount}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {loading ? (
-                    <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-4 w-20 rounded"></div>
-                  ) : (
-                    <div className="text-sm text-gray-900 dark:text-white">
-                      ${token.currentPrice?.toLocaleString()}
-                    </div>
-                  )}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {loading ? (
-                    <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-4 w-16 rounded"></div>
-                  ) : (
-                    <div className={`text-sm font-medium ${
-                      (token.priceChangePercentage24h || 0) >= 0 
-                        ? 'text-green-600 dark:text-green-500' 
-                        : 'text-red-600 dark:text-red-500'
+          <div className="flex items-start gap-3 mb-3">
+            {token.image && (
+              <img
+                src={token.image}
+                alt={token.name || token.symbol}
+                className="w-8 h-8 rounded-full"
+              />
+            )}
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">
+                {token.name || token.symbol.toUpperCase()}
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {token.symbol.toUpperCase()}
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex justify-between items-baseline">
+              <span className="text-sm text-gray-500 dark:text-gray-400">Amount:</span>
+              <span className="font-medium text-gray-900 dark:text-gray-100">
+                {token.amount.toLocaleString(undefined, { maximumFractionDigits: 8 })}
+              </span>
+            </div>
+
+            {token.currentPrice && (
+              <>
+                <div className="flex justify-between items-baseline">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Price:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">
+                    ${token.currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-baseline">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Value:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">
+                    ${token.value?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                </div>
+
+                {token.priceChangePercentage24h && (
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">24h:</span>
+                    <span className={`font-medium ${
+                      token.priceChangePercentage24h >= 0 ? 'text-green-500' : 'text-red-500'
                     }`}>
-                      {token.priceChangePercentage24h?.toFixed(2)}%
-                    </div>
-                  )}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {loading ? (
-                    <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-4 w-24 rounded"></div>
-                  ) : (
-                    <div className="text-sm text-gray-900 dark:text-white">
-                      ${token.value?.toLocaleString()}
-                    </div>
-                  )}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => onEdit(token)}
-                      className="text-blue-600 dark:text-blue-500 hover:text-blue-900 dark:hover:text-blue-400 transition-colors"
-                      title="Edit amount"
-                    >
-                      <PencilIcon className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={() => onRemove(token.id)}
-                      className="text-red-600 dark:text-red-500 hover:text-red-900 dark:hover:text-red-400 transition-colors"
-                      title="Remove token"
-                    >
-                      <TrashIcon className="h-5 w-5" />
-                    </button>
+                      {token.priceChangePercentage24h >= 0 ? '+' : ''}
+                      {token.priceChangePercentage24h.toFixed(2)}%
+                    </span>
                   </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                )}
+              </>
+            )}
+
+            {token.error && (
+              <p className="text-sm text-red-500 mt-2">{token.error}</p>
+            )}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
