@@ -185,7 +185,7 @@ export default function Portfolio() {
             </p>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2 sm:gap-4">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4">
           <button
             onClick={toggleTheme}
             className="flex-none inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 border border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-300 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
@@ -205,7 +205,7 @@ export default function Portfolio() {
           </button>
           <button
             onClick={() => setShowAddToken(true)}
-            className="flex-1 sm:flex-none bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-md transition-colors duration-200 flex items-center justify-center"
+            className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white text-sm font-semibold rounded-lg shadow-md transition-colors duration-200"
           >
             <PlusIcon className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">Add Token</span>
