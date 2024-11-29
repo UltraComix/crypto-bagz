@@ -29,6 +29,7 @@ export default function Portfolio() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [tokenToEdit, setTokenToEdit] = useState<Token | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
@@ -228,20 +229,19 @@ export default function Portfolio() {
         </div>
       )}
 
-      <PortfolioSummary tokens={tokens} loading={loading} />
+      <PortfolioSummary tokens={tokens} />
       <TokenList 
         tokens={tokens} 
-        onRemove={removeToken} 
-        onEdit={(token) => setTokenToEdit(token)}
+        onDelete={removeToken} 
+        onEdit={token => {
+          setTokenToEdit(token);
+          setShowEditModal(true);
+        }}
         loading={loading} 
       />
       
       {showAddToken && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
-            <AddTokenForm onAdd={addToken} onClose={() => setShowAddToken(false)} />
-          </div>
-        </div>
+        <AddTokenForm onClose={() => setShowAddToken(false)} onAdd={addToken} />
       )}
 
       {tokenToEdit && (

@@ -8,7 +8,7 @@ interface TokenListProps {
   tokens: Token[];
   onDelete: (id: string) => void;
   onEdit: (token: Token) => void;
-  loading: boolean;
+  loading?: boolean;
 }
 
 type SortField = 'name' | 'amount' | 'price' | 'value' | 'change';
