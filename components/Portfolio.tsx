@@ -20,7 +20,7 @@ export interface Token {
   priceChangePercentage24h?: number;
   value?: number;
   image?: string;
-  error?: string;
+  error?: string | null;
 }
 
 export default function Portfolio() {
@@ -87,7 +87,7 @@ export default function Portfolio() {
             currentPrice: data.usd,
             priceChangePercentage24h: data.usd_24h_change,
             value: data.usd * token.amount,
-            error: null
+            error: undefined
           };
         })
       );
