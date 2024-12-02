@@ -125,7 +125,7 @@ export default function TokenList({ tokens, onDelete, onEdit, loading }: TokenLi
                 <div className="flex justify-between items-baseline">
                   <span className="text-sm text-gray-500 dark:text-gray-400">Price:</span>
                   <span className="font-medium text-gray-900 dark:text-gray-100">
-                    ${token.currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ${token.currentPrice.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
                   </span>
                 </div>
 

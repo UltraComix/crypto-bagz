@@ -17,6 +17,11 @@ export default function PortfolioSummary({ tokens }: PortfolioSummaryProps) {
   }, 0);
   const changePercentage = (totalChange24h / (totalValue - totalChange24h)) * 100;
 
+  // Sort tokens by value (highest first) and take top 6
+  const topTokens = [...tokens]
+    .sort((a, b) => (b.value || 0) - (a.value || 0))
+    .slice(0, 6);
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sm:p-6">
       <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Portfolio Summary</h2>
@@ -48,9 +53,9 @@ export default function PortfolioSummary({ tokens }: PortfolioSummaryProps) {
       </div>
 
       <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-        <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">Assets: {tokens.length}</div>
+        <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">Top Assets ({tokens.length} total)</div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {tokens.slice(0, 6).map(token => (
+          {topTokens.map(token => (
             <div key={token.id} className="flex items-center gap-2">
               {token.image && (
                 <img 
